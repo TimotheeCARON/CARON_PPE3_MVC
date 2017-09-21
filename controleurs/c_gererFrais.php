@@ -1,7 +1,8 @@
 <?php
+date_default_timezone_set('Europe/Paris');
 include("vues/v_sommaire.php");
 $idVisiteur = $_SESSION['idVisiteur'];
-$mois = date_default_timezone_set('Europe/Stockholm') == 0;
+$mois = getMois(date("d/m/Y"));
 $numAnnee =substr( $mois,0,4);
 $numMois =substr( $mois,4,2);
 $action = $_REQUEST['action'];

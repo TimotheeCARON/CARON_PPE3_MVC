@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 /** 
  * Classe d'accès aux données. 
  
@@ -60,27 +60,6 @@ class PdoGsb{
 		$ligne = $rs->fetch();
 		return $ligne;
 	}
-
-	 public function getInfosGestionnaire($idVisiteur){
-          $SQL = "SELECT * from visiteur where visiteur.id='$idVisiteur'";
-          $rs = PdoGsb::$monPdo->query($SQL);
-          $ligne = $rs->fetch( );
-          
-          if ($ligne['gestionnaire'] == 1) {
-            return true;
-          }
-          else 
-          {
-            return false;
-          }
-      }
-
-      public function getForfaits(){
-          $SQL = "SELECT id,montant from fraisforfais";
-          $rs = PdoGsb::$monPdo->query($SQL);
-          $ligne = $rs->fetchAll( );
-          return $ligne;
-      }
 
 /**
  * Retourne sous forme d'un tableau associatif toutes les lignes de frais hors forfait
@@ -168,6 +147,22 @@ class PdoGsb{
 			PdoGsb::$monPdo->exec($req);
 		}
 		
+	}
+/** renvoi vrai si l'utilisateur est gestionnaire,
+ *  faux sinon
+
+ * @param $id
+ */
+	public function estGestionnaire($id){
+		$b = false;
+		$req = "select type from visiteur where id ='$id'";
+		$res = PdoGsb::$monPdo->query($req);
+		$ligne = $res->fetch();
+		if($ligne['type']=='gestionnaire'){
+			$b = true;
+		}
+		return $b;
+
 	}
 /**
  * met à jour le nombre de justificatifs de la table ficheFrais
@@ -317,6 +312,32 @@ class PdoGsb{
 		$req = "update ficheFrais set idEtat = '$etat', dateModif = now() 
 		where fichefrais.idvisiteur ='$idVisiteur' and fichefrais.mois = '$mois'";
 		PdoGsb::$monPdo->exec($req);
+	}
+
+	public function getForfaits()
+	{
+		$req="select id,libelle,montant from fraisforfait";
+		$res=PdoGsb::$monPdo->query($req);
+		$lesLignes=$res->fetchAll();
+		return $lesLignes;
+	}
+	public function setForfait($idForfait,$montantForfait)
+	{
+		$req="update fraisforfait set montant=$montantForfait where id='$idForfait'";
+		echo $req;
+		PdoGsb::$monPdo->exec($req);
+
+	}
+	public function forfaitValide($montant)
+	{
+		if($montant >= 0)
+		{
+			return true;
+		}
+		else
+		{
+			return false;
+		}
 	}
 }
 ?>

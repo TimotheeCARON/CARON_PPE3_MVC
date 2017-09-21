@@ -1,13 +1,18 @@
 <?php
-include("vues/v_sommaire.php");
+	include("vues/v_sommaire.php");
+	$action=$_REQUEST['action'];
+	$lesForfaits = $pdo->getForfaits();
+	switch($action){
+		case 'voirForfait' :include("vues/v_gererForfaits.php");
+							break;
+		case 'modifierForfait' : foreach($lesForfaits as $forfait){
+										$pdo->setForfait($forfait['id'],$_REQUEST[$forfait['id']]);
+
+								}
+								echo "Modification effectué";
+								break;
+	}
+	
+	
+	
 ?>
-<div id="contenu">
-	<h2 class="contenu"> Modifier les forfaits</h2>
-	<form action="requeteForfaits.php" method="post">
-		Forfait Etape : <input type="text" name="ETP" placeholder="getForfaits(ETP)"><br>
-		Frais Kilométrique : <input type="text" name="KM"><br>
-		Nuitée Hôtel : <input type="text" name="NUI"><br>
-		Repas Restaurant : <input type="text" name="REP"><br>
-		<input type="submit" name="valider">
-	</form>
-</div>
